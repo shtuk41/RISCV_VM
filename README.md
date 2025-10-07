@@ -1,1 +1,1 @@
-#VM for running machine code generated for RISV V processor
+VM for running a machine code generated for RISV V processor
