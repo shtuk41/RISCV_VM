@@ -45,12 +45,12 @@ typedef struct regfile
     reg pc;
 } regfile;
 
-struct instruction
+struct type
 {
 private:
     uint32_t value;
 public:
-    explicit instruction(uint32_t v = 0) : value(v) {}
+    explicit type(uint32_t v = 0) : value(v) {}
 
     constexpr uint32_t bits(int hi, int lo) const 
     {
@@ -80,9 +80,9 @@ public:
     constexpr operator uint32_t() const {return value;}
 };
 
-struct RType : private instruction
+struct rinst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t funct7() const { return bits(31, 25);}
@@ -101,9 +101,9 @@ struct RType : private instruction
     constexpr uint32_t opcode(uint32_t val) { return bits_set(val, 6,0);} 
 };
 
-struct IType : private instruction
+struct iinst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t imm() const { return bits(31, 20);}
@@ -120,9 +120,9 @@ struct IType : private instruction
     constexpr uint32_t opcode(uint32_t val) { return bits_set(val, 6,0);} 
 };
 
-struct SType : private instruction
+struct sinst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t imm11_5() const { return bits(31, 25);}
@@ -141,9 +141,9 @@ struct SType : private instruction
     constexpr uint32_t opcode(uint32_t val) { return bits_set(val, 6,0);} 
 };
 
-struct BType : private instruction
+struct binst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t imm12() const {return bits(31);}
@@ -167,9 +167,9 @@ struct BType : private instruction
 };
 
 
-struct UType : private instruction
+struct uinst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t imm() const { return bits(31, 12);}
@@ -182,9 +182,9 @@ struct UType : private instruction
     constexpr uint32_t opcode(uint32_t val) { return bits_set(val, 6,0);} 
 };
 
-struct UType : private instruction
+struct jinst : private type
 {
-    using instruction::instruction;
+    using type::type;
 
     //gets
     constexpr uint32_t imm20() const { return bits(31);}
@@ -201,6 +201,95 @@ struct UType : private instruction
     constexpr uint32_t imm19_12(uint32_t val)  { return bits_set(val, 19, 12);}
     constexpr uint32_t rd(uint32_t val) { return bits_set(val, 11, 7);}
     constexpr uint32_t opcode(uint32_t val) { return bits_set(val, 6,0);} 
+};
+
+struct iimm: private type
+{
+    using type::type;
+    
+    //gets
+    constexpr uint32_t inst31() const {return bits(31,11);}
+    constexpr uint32_t inst30_25() const {return bits(10,5);}
+    constexpr uint32_t inst24_21() const {return bits(4, 1);}
+    constexpr uint32_t inst20() const {return bits(0);}
+
+    //sets
+    constexpr uint32_t inst31(uint32_t val) { return bits_set(val, 31, 11);}
+    constexpr uint32_t inst30_25(uint32_t val) {return bits_set(val, 10,5);}
+    constexpr uint32_t inst24_21(uint32_t val) {return bits_set(val, 4, 1);}
+    constexpr uint32_t inst20(uint32_t val) {return bits_set(val, 0);}
+};
+
+struct simm: private type
+{
+    using type::type;
+    
+    //gets
+    constexpr uint32_t inst31() const {return bits(31,11);}
+    constexpr uint32_t inst30_25() const {return bits(10,5);}
+    constexpr uint32_t inst11_8() const {return bits(4, 1);}
+    constexpr uint32_t inst7() const {return bits(0);}
+
+    //sets
+    constexpr uint32_t inst31(uint32_t val) { return bits_set(val, 31, 11);}
+    constexpr uint32_t inst30_25(uint32_t val) {return bits_set(val, 10,5);}
+    constexpr uint32_t inst11_8(uint32_t val) {return bits_set(val, 4, 1);}
+    constexpr uint32_t inst7(uint32_t val) {return bits_set(val, 0);}
+};
+
+struct bimm: private type
+{
+    using type::type;
+    
+    //gets
+    constexpr uint32_t inst31() const {return bits(31,12);}
+    constexpr uint32_t inst7() const {return bits(0);}
+    constexpr uint32_t inst30_25() const {return bits(10,5);}
+    constexpr uint32_t inst11_8() const {return bits(4, 1);}
+    constexpr uint32_t inst0() const {return bits(0);}
+
+    //sets
+    constexpr uint32_t inst31(uint32_t val)  {return bits_set(val, 31,12);}
+    constexpr uint32_t inst7(uint32_t val)  {return bits_set(val, 0);}
+    constexpr uint32_t inst30_25(uint32_t val)  {return bits_set(val, 10,5);}
+    constexpr uint32_t inst11_8(uint32_t val)  {return bits_set(val, , 1);}
+    constexpr uint32_t inst0(uint32_t val)  {return bits_set(val, 0);}
+};
+
+struct uimm: private type
+{
+    using type::type;
+
+    //gets
+    constexpr uint32_t inst31() const { return bits(31);}
+    constexpr uint32_t inst30_20() const { return bits(30, 20);}
+    constexpr uint32_t inst19_12() const { return bits(19, 12);}
+    constexpr uint32_t inst0() const { return bits(11,0); }
+
+    //sets
+    constexpr uint32_t inst31(uint32_t val) { return bits_set(val, 31);}
+    constexpr uint32_t inst30_20(uint32_t val) { return bits_set(val, 30, 20);}
+    constexpr uint32_t inst19_12(uint32_t val) { return bits_set(val, 19, 12);}
+    constexpr uint32_t inst0(int32_t val) { return bits_set(val, 11, 0); }
+};
+
+struct jimm: private type
+{
+    using type::type;
+
+    //gets
+    constexpr uint32_t inst31() const { return bits(31,20);}
+    constexpr uint32_t inst19_12() const { return bits(19, 12);}
+    constexpr uint32_t inst20() const {return bits(20);}
+    constexpr uint32_t inst30_25() const { return bits(10,5);}
+    constexpr uint32_t inst0() const {return bits(0);}
+
+    //sets
+    constexpr uint32_t inst31(uint32_t val) { return bits_set(val, 31,20);}
+    constexpr uint32_t inst19_12(uint32_t val) { return bits_set(val, 19, 12);}
+    constexpr uint32_t inst20(uint32_t val) {return bits_set(val, 20);}
+    constexpr uint32_t inst30_25(uint32_t val) { return bits_set(val, 10, 5);}
+    constexpr uint32_t inst0(uint32_t val)  {return bits_set(val, 0);}
 };
 
 
