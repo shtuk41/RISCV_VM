@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "instructions.h"
 
-TEST(MathUtils, Multiply) 
+TEST(MathUtils, Execute) 
 {
-    EXPECT_EQ(multiply(2, 3), 6);
+    EXPECT_EQ(execute(0), false);
 }

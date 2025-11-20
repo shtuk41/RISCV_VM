@@ -252,7 +252,7 @@ struct bimm: private type
     constexpr uint32_t inst31(uint32_t val)  {return bits_set(val, 31,12);}
     constexpr uint32_t inst7(uint32_t val)  {return bits_set(val, 0);}
     constexpr uint32_t inst30_25(uint32_t val)  {return bits_set(val, 10,5);}
-    constexpr uint32_t inst11_8(uint32_t val)  {return bits_set(val, , 1);}
+    constexpr uint32_t inst11_8(uint32_t val)  {return bits_set(val, 1);}
     constexpr uint32_t inst0(uint32_t val)  {return bits_set(val, 0);}
 };
 
@@ -291,6 +291,8 @@ struct jimm: private type
     constexpr uint32_t inst30_25(uint32_t val) { return bits_set(val, 10, 5);}
     constexpr uint32_t inst0(uint32_t val)  {return bits_set(val, 0);}
 };
+
+bool execute(uint32_t code);
 
 
 
